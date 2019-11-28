@@ -1,6 +1,4 @@
-package group.ten.p2.ServerInterface;
-
-import group.ten.p2.ServerInterface.ServerInterface;
+package group.ten.p2.interfaces;
 
 public class SoapServer implements ServerInterface {
 }

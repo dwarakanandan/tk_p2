@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/bookingservice")
 public class ReservationBookingController {
 
-	@Path("{example}")
+	@Path("/{example}")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String example(@PathParam("example") String example) {

@@ -1,4 +1,4 @@
-package group.ten.p2.ServerInterface;
+package group.ten.p2.interfaces;
 
 public interface ServerInterface {
 }
