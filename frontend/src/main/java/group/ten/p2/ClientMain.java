@@ -33,32 +33,32 @@ public class ClientMain extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(950, 720));
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Consolas", 0, 24)); // NOI18N
         jLabel1.setText("TK Airport Ticket Reservation System");
 
-        jScrollPane1.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
+        jTable1.getTableHeader().setFont(new java.awt.Font("Consolas", java.awt.Font.BOLD, 18));
+		jTable1.getTableHeader().setPreferredSize(new java.awt.Dimension(100, 40));
 
         jTable1.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null}
+                {"10-11-2019", "Boeing-747", "Darmstadt", "12:00", "Berlin", "15:00"}
             },
             new String [] {
-                "Origin Date", "Flight Type", "Departure", "Arrival"
+                "Origin Date", "Flight Type", "Dep Airport", "Dep Time", "Arr Airport", "Arr Time"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setRowHeight(24);
+        jTable1.setRowHeight(30);
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setFont(new java.awt.Font("Consolas", 0, 24)); // NOI18N

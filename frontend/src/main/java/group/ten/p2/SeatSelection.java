@@ -206,9 +206,7 @@ public class SeatSelection extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        javax.swing.JLabel label = new javax.swing.JLabel("Booking Successful!!!  Total ticket cost: 5000 Euros. The amount has been deducted from your account!!!");
-		label.setFont(new java.awt.Font("Consolas", java.awt.Font.PLAIN, 24));
-        javax.swing.JOptionPane.showMessageDialog(null, label, "SUCCESS" , javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        new Payment().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
