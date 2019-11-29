@@ -5,16 +5,30 @@
  */
 package group.ten.p2;
 
+import group.ten.p2.interfaces.RestServer;
+import group.ten.p2.interfaces.ServerInterface;
+
+import java.io.IOException;
+
 /**
  *
  * @author dwara
  */
 public class ClientMain extends javax.swing.JFrame {
 
+    private ServerInterface serverInterface;
     /**
      * Creates new form ClientMain
      */
-    public ClientMain() {
+    public ClientMain(String type) {
+        if(type=="REST"){
+            serverInterface = new RestServer();
+            try {
+                System.out.println(serverInterface.getFlights());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         initComponents();
     }
 
@@ -137,9 +151,10 @@ public class ClientMain extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ClientMain().setVisible(true);
+                new ClientMain("REST").setVisible(true);
             }
         });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

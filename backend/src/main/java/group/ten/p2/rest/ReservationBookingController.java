@@ -1,10 +1,13 @@
 package group.ten.p2.rest;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import group.ten.p2.airport.Flight;
+import group.ten.p2.airport.Seat;
+import group.ten.p2.ServerMain;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.Collection;
+import java.util.HashMap;
 
 @Path("/bookingservice")
 public class ReservationBookingController {
@@ -17,4 +20,44 @@ public class ReservationBookingController {
 		return example + "!!!!";
 	}
 
+	@Path("/flights")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Flight> getFlights(){
+		HashMap<String,Flight> flights = ServerMain.getFlights();
+		return flights.values();
+	}
+
+	@Path("/flight/{flightId}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Flight getFlight(@PathParam("flightId") String flightId){
+		HashMap<String, Flight> flights = ServerMain.getFlights();
+		return flights.get(flightId);
+	}
+
+	@Path("/flight/{flightId}/seats")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Seat> getSeats(@PathParam("flightId") String flightId){
+		HashMap<String, Flight> flights = ServerMain.getFlights();
+		return flights.get(flightId).seats().values();
+	}
+
+	@Path("/book")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String bookSeat(@QueryParam("flightId") String flightId, @QueryParam("seatId") String seatId){
+		HashMap<String, Flight> flights = ServerMain.getFlights();
+		Flight flight = flights.get(flightId);
+		Seat seat = flight.getSeat(seatId);
+		if(seat.isAvailable()){
+			seat.setAvailable(false);
+			return "Seat booked successfully";
+		}else{
+			return "Seat has already been booked";
+		}
+	}
+
 }
+
