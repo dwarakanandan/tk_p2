@@ -10,4 +10,6 @@ public interface ServerInterface {
 
     public String getSeatsForFlight(String flightNumber) throws IOException;
 
+    public String bookSeatForFlight(String flightNumber, String seatNumber) throws IOException;
+
 }

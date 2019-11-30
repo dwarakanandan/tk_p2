@@ -55,9 +55,11 @@ public class SeatSelection extends javax.swing.JFrame {
         flightSeatsArray = new String[flightSeatsArrayJSON.length()];
         for (int i=0; i<flightSeatsArrayJSON.length(); i++) {
             JSONObject flightSeat = flightSeatsArrayJSON.getJSONObject(i);
-            flightSeatsArray[i] = flightSeat.getString(RestServer.SEAT_UNIQUE_CODE) +"-[" + flightSeat.getString(RestServer.SEAT_TYPE)+ "]";
-            if ((boolean)flightSeat.get(RestServer.EXIT_ROW)) {
-                flightSeatsArray[i] = flightSeatsArray[i] + "-[EXIT]";
+            if((boolean)flightSeat.get(RestServer.SEAT_AVAIALBLE)) {
+                flightSeatsArray[i] = flightSeat.getString(RestServer.SEAT_UNIQUE_CODE) +"-[" + flightSeat.getString(RestServer.SEAT_TYPE)+ "]";
+                if ((boolean)flightSeat.get(RestServer.EXIT_ROW)) {
+                    flightSeatsArray[i] = flightSeatsArray[i] + "-[EXIT]";
+                }
             }
         }
     }
@@ -266,10 +268,16 @@ public class SeatSelection extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(null, label, "ERROR" , javax.swing.JOptionPane.WARNING_MESSAGE);
             return true;
         }
-        if(splitSeatString[2].equals("[EXIT]") && age>40) {
+        if(splitSeatString.length==3 && splitSeatString[2].equals("[EXIT]") && age>40) {
             return true;
         }
         return false;
+    }
+
+    private String getSeatIdentifier() {
+        String selectedSeat = flightSeatsArray[jComboBoxSeatSelection.getSelectedIndex()];
+        String[] splitSeatString = selectedSeat.split("-");
+        return splitSeatString[0];
     }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -279,7 +287,7 @@ public class SeatSelection extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(null, label, "ERROR" , javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
-        new Payment().setVisible(true);
+        new Payment(this.flightIdentifier, getSeatIdentifier()).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

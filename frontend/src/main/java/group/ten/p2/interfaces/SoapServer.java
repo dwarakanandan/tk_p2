@@ -15,4 +15,8 @@ public class SoapServer implements ServerInterface {
     public String getSeatsForFlight(String flightNumber) throws IOException{
         return "";
     }
+
+    public String bookSeatForFlight(String flightNumber, String seatNumber) throws IOException {
+        return "";
+    }
 }

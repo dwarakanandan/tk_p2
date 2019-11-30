@@ -19,6 +19,7 @@ public class RestServer implements ServerInterface{
     public static final String SEAT_TYPE = "type";
     public static final String SEAT_UNIQUE_CODE = "uniqueCode";
     public static final String EXIT_ROW = "exitRow";
+    public static final String SEAT_AVAIALBLE = "available";
 
     String baseURL = "http://localhost:8080/bookingservice";
     private final CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -52,5 +53,9 @@ public class RestServer implements ServerInterface{
             HttpEntity entity = response.getEntity();
             return EntityUtils.toString(entity);
         }
+    }
+
+    public String bookSeatForFlight(String flightNumber, String seatNumber) {
+        return "";
     }
 }

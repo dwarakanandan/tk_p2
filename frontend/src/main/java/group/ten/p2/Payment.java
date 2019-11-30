@@ -10,11 +10,15 @@ package group.ten.p2;
  * @author dwara
  */
 public class Payment extends javax.swing.JFrame {
+    private String flightIdentifier;
+    private String seatIdentifier;
 
     /**
      * Creates new form Payment
      */
-    public Payment() {
+    public Payment(String flightIdentifier, String seatIdentifier) {
+        this.flightIdentifier = flightIdentifier;
+        this.seatIdentifier = seatIdentifier;
         initComponents();
     }
 

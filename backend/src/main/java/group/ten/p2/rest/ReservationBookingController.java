@@ -53,9 +53,9 @@ public class ReservationBookingController {
 		Seat seat = flight.getSeat(seatId);
 		if(seat.isAvailable()){
 			seat.setAvailable(false);
-			return "Seat booked successfully";
+			return "SUCCESS";
 		}else{
-			return "Seat has already been booked";
+			return "FAILURE";
 		}
 	}
 
