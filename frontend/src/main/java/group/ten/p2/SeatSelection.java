@@ -5,17 +5,61 @@
  */
 package group.ten.p2;
 
+import java.io.IOException;
+import java.util.HashMap;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import group.ten.p2.interfaces.RestServer;
+import group.ten.p2.interfaces.ServerInterface;
+
 /**
  *
  * @author dwara
  */
 public class SeatSelection extends javax.swing.JFrame {
+    private ServerInterface serverInterface;
+    private String flightIdentifier;
+    private String flightString;
+    private String flightSeatsString;
+    private HashMap<String, String> flightDetails = new HashMap<>();
+    private String[] flightSeatsArray;
 
     /**
      * Creates new form SeatSelection
      */
-    public SeatSelection() {
+    public SeatSelection(String type, String flightIdentifier) {
+        this.flightIdentifier = flightIdentifier;
+        if(type=="REST"){
+            serverInterface = new RestServer();
+            try {
+                flightString = serverInterface.getFlight(this.flightIdentifier);
+                flightSeatsString = serverInterface.getSeatsForFlight(this.flightIdentifier);
+                populateFlight();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         initComponents();
+    }
+
+    private void populateFlight() {
+        JSONObject flight = new JSONObject(this.flightString);
+        flightDetails.put(RestServer.ORIGIN_DATE, flight.getString(RestServer.ORIGIN_DATE));
+        flightDetails.put(RestServer.FILGHT_NUMBER, flight.getString(RestServer.FILGHT_NUMBER));
+        flightDetails.put(RestServer.DEPARTURE_AIRPORT, flight.getString(RestServer.DEPARTURE_AIRPORT));
+        flightDetails.put(RestServer.ARRIVAL_AIRPORT, flight.getString(RestServer.ARRIVAL_AIRPORT));
+
+        JSONArray flightSeatsArrayJSON = new JSONArray(flightSeatsString);
+        flightSeatsArray = new String[flightSeatsArrayJSON.length()];
+        for (int i=0; i<flightSeatsArrayJSON.length(); i++) {
+            JSONObject flightSeat = flightSeatsArrayJSON.getJSONObject(i);
+            flightSeatsArray[i] = flightSeat.getString(RestServer.SEAT_UNIQUE_CODE) +"-[" + flightSeat.getString(RestServer.SEAT_TYPE)+ "]";
+            if ((boolean)flightSeat.get(RestServer.EXIT_ROW)) {
+                flightSeatsArray[i] = flightSeatsArray[i] + "-[EXIT]";
+            }
+        }
     }
 
     /**
@@ -47,6 +91,11 @@ public class SeatSelection extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
 
+        jTextFieldOriginDate.setText(this.flightDetails.get(RestServer.ORIGIN_DATE));
+        jTextFieldSelectedFlight.setText(this.flightDetails.get(RestServer.FILGHT_NUMBER));
+        jTextFieldDepartureAirport.setText(this.flightDetails.get(RestServer.DEPARTURE_AIRPORT));
+        jTextFieldArrivalAirport.setText(this.flightDetails.get(RestServer.ARRIVAL_AIRPORT));
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -66,7 +115,7 @@ public class SeatSelection extends javax.swing.JFrame {
         jLabel5.setText("Food Preference: ");
 
         jComboBoxFoodPreference.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
-        jComboBoxFoodPreference.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxFoodPreference.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Vegetarian", "Non-Vegetarian", "Vegan"}));
 
         jButton1.setFont(new java.awt.Font("Consolas", 0, 24)); // NOI18N
         jButton1.setText("Book Ticket");
@@ -79,8 +128,8 @@ public class SeatSelection extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
         jLabel6.setText("Seat Selection: ");
 
-        jComboBoxSeatSelection.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
-        jComboBoxSeatSelection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "item1", "item2" }));
+        jComboBoxSeatSelection.setFont(new java.awt.Font("Consolas", 0, 16)); // NOI18N
+        jComboBoxSeatSelection.setModel(new javax.swing.DefaultComboBoxModel<>(flightSeatsArray));
 
         jTextFieldSelectedFlight.setEditable(false);
         jTextFieldSelectedFlight.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
@@ -205,7 +254,31 @@ public class SeatSelection extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private boolean isNotValidSeat() {
+        String selectedSeat = flightSeatsArray[jComboBoxSeatSelection.getSelectedIndex()];
+        String[] splitSeatString = selectedSeat.split("-");
+        int age;
+        try {
+                age = Integer.parseInt(jTextFieldAge.getText());
+        } catch(Exception e) {
+            javax.swing.JLabel label = new javax.swing.JLabel("Invalid age Entered!!!");
+            label.setFont(new java.awt.Font("Consolas", java.awt.Font.PLAIN, 18));
+            javax.swing.JOptionPane.showMessageDialog(null, label, "ERROR" , javax.swing.JOptionPane.WARNING_MESSAGE);
+            return true;
+        }
+        if(splitSeatString[2].equals("[EXIT]") && age>40) {
+            return true;
+        }
+        return false;
+    }
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (isNotValidSeat()) {
+            javax.swing.JLabel label = new javax.swing.JLabel("Emergency exit seats can only be selected by customers 40 years of age or less!!!");
+            label.setFont(new java.awt.Font("Consolas", java.awt.Font.PLAIN, 18));
+            javax.swing.JOptionPane.showMessageDialog(null, label, "ERROR" , javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         new Payment().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed

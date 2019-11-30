@@ -10,6 +10,9 @@ import group.ten.p2.interfaces.ServerInterface;
 
 import java.io.IOException;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 /**
  *
  * @author dwara
@@ -17,19 +20,39 @@ import java.io.IOException;
 public class ClientMain extends javax.swing.JFrame {
 
     private ServerInterface serverInterface;
+    private String flightListString;
+    String type;
+    String[][] flightList;
     /**
      * Creates new form ClientMain
      */
     public ClientMain(String type) {
+        this.type = type;
         if(type=="REST"){
             serverInterface = new RestServer();
             try {
-                System.out.println(serverInterface.getFlights());
+                flightListString = serverInterface.getFlights();
+                populateFlightList();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         initComponents();
+    }
+
+    private void populateFlightList() {
+        JSONArray flightsArray = new JSONArray(flightListString);
+        flightList = new String[flightsArray.length()][];
+        for (int i=0; i<flightsArray.length(); i++) {
+            JSONObject flight = flightsArray.getJSONObject(i);
+            flightList[i] = new String[6];
+            flightList[i][0] = flight.getString(RestServer.ORIGIN_DATE);
+            flightList[i][1] = flight.getString(RestServer.FILGHT_NUMBER);
+            flightList[i][2] = flight.getString(RestServer.DEPARTURE_AIRPORT);
+            flightList[i][3] = flight.getString(RestServer.DEPARTURE_TIME);
+            flightList[i][4] = flight.getString(RestServer.ARRIVAL_AIRPORT);
+            flightList[i][5] = flight.getString(RestServer.ARRIVAL_TIME);
+        }
     }
 
     /**
@@ -56,12 +79,12 @@ public class ClientMain extends javax.swing.JFrame {
 		jTable1.getTableHeader().setPreferredSize(new java.awt.Dimension(100, 40));
 
         jTable1.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
+        
+        
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"10-11-2019", "Boeing-747", "Darmstadt", "12:00", "Berlin", "15:00"}
-            },
+            flightList,
             new String [] {
-                "Origin Date", "Flight Type", "Dep Airport", "Dep Time", "Arr Airport", "Arr Time"
+                "Origin Date", "Flight Number", "Dep Airport", "Dep Time", "Arr Airport", "Arr Time"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -118,7 +141,8 @@ public class ClientMain extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.dispose();
-        new group.ten.p2.SeatSelection().setVisible(true);
+        String flightIdentifier = (flightList[jTable1.getSelectedRow()][1])+"-"+(flightList[jTable1.getSelectedRow()][0]);
+        new group.ten.p2.SeatSelection(this.type, flightIdentifier).setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
