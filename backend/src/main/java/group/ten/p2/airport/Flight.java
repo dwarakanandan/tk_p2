@@ -39,7 +39,7 @@ public class Flight {
         if(!seat.isAvailable()) return "FAILURE";
         if(seat.exitRow && userAge > 40) return "FAILURE";
 
-        Booking booking = new Booking(seat, userId, userName, userAge, foodSelection);
+        Booking booking = new Booking(userId, userName, userAge, foodSelection);
         seat.setBooking(booking);
         seat.setAvailable(false);
         return "SUCCESS";
