@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 public class Flight {
 
     private Airplane airplane;
+    private String airplaneType;
     private LocalDate date;
     private Instant departureTime;
     private Instant arrivalTime;
@@ -21,6 +22,7 @@ public class Flight {
                   Instant arrivalTime, String departureAirport, String arrivalAirport,
                   int firstPrice, int economyPlusPrice, int economyPrice) {
         this.airplane = new Airplane(airplaneType);
+        this.airplaneType = airplaneType;
         this.flightId = flightId;
         this.date = date;
         this.departureTime = departureTime;
@@ -46,6 +48,13 @@ public class Flight {
 
     }
 
+    public String getAirplaneType() {
+        return airplaneType;
+    }
+
+    public void setAirplaneType(String airplaneType) {
+        this.airplaneType = airplaneType;
+    }
 
     public String getDate() {
         return date.toString();
@@ -135,6 +144,7 @@ public class Flight {
     public String toString() {
         return "Flight{" +
                 "airplane=" + airplane +
+                ", airplaneType=" + airplaneType +
                 ", date=" + date +
                 ", departureTime=" + departureTime +
                 ", arrivalTime=" + arrivalTime +

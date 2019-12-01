@@ -21,16 +21,16 @@ public class ServerMain {
 		flights = new LinkedHashMap<String, Flight>();
 		for(int i = 1; i <= 7; i++){
 			add_flight(new Flight("UA102", "Boeing", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "LHR", 300, 200, 150));
-			add_flight(new Flight("UA103","Boeing", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "LHR", 300, 200, 150));
-			add_flight(new Flight("UA104","Boeing", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "LHR", 300, 200, 150));
+			add_flight(new Flight("UA103","Boeing", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "NYC", 520, 320, 220));
+			add_flight(new Flight("UA104","Boeing", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "BOM", 730, 530, 330));
 
 			add_flight(new Flight("UA105","Airbus", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "LHR", 300, 200, 150));
-			add_flight(new Flight("UA106","Airbus", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "LHR", 300, 200, 150));
-			add_flight(new Flight("UA107","Airbus", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "LHR", 300, 200, 150));
+			add_flight(new Flight("UA106","Airbus", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "NYC", 520, 320, 220));
+			add_flight(new Flight("UA107","Airbus", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "BOM", 730, 530, 330));
 
 			add_flight(new Flight("UA108","Embraer", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "LHR", 300, 200, 150));
-			add_flight(new Flight("UA109","Embraer", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "LHR", 300, 200, 150));
-			add_flight(new Flight("UA110","Embraer", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "LHR", 300, 200, 150));
+			add_flight(new Flight("UA109","Embraer", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "NYC", 520, 320, 220));
+			add_flight(new Flight("UA110","Embraer", LocalDate.of(2019, 12, i), Instant.now(), Instant.now(), "FRA", "BOM", 730, 530, 330));
 
 		}
 

@@ -28,20 +28,21 @@ public class ClientMain extends javax.swing.JFrame {
      * Creates new form ClientMain
      */
     public ClientMain(String type) {
-        this.type = type;
-        if(type.startsWith("REST")){
-            serverInterface = new RestServer();
-        }else if(type.startsWith("SOAP")){
-            serverInterface = new SoapServer();
-        }else{
-            throw new RuntimeException("Server interface must be SOAP or REST");
-        }
-
         try {
+            this.type = type;
+            if(type.startsWith("REST")){
+                serverInterface = new RestServer();
+            }else if(type.startsWith("SOAP")){
+                serverInterface = new SoapServer();
+            }else{
+                throw new RuntimeException("Server interface must be SOAP or REST");
+            }
+
             flightListString = serverInterface.getFlights();
             populateFlightList();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Could not connect to Server!!! Please make sure the server is running before starting the client.");
+            System.exit(1);
         }
 
         initComponents();
@@ -54,13 +55,14 @@ public class ClientMain extends javax.swing.JFrame {
         flightList = new String[flightsArray.length()][];
         for (int i=0; i<flightsArray.length(); i++) {
             JSONObject flight = flightsArray.getJSONObject(i);
-            flightList[i] = new String[6];
+            flightList[i] = new String[7];
             flightList[i][0] = flight.getString(RestServer.ORIGIN_DATE);
             flightList[i][1] = flight.getString(RestServer.FILGHT_NUMBER);
-            flightList[i][2] = flight.getString(RestServer.DEPARTURE_AIRPORT);
-            flightList[i][3] = flight.getString(RestServer.DEPARTURE_TIME);
-            flightList[i][4] = flight.getString(RestServer.ARRIVAL_AIRPORT);
-            flightList[i][5] = flight.getString(RestServer.ARRIVAL_TIME);
+            flightList[i][2] = flight.getString(RestServer.FILGHT_TYPE);
+            flightList[i][3] = flight.getString(RestServer.DEPARTURE_AIRPORT);
+            flightList[i][4] = flight.getString(RestServer.DEPARTURE_TIME);
+            flightList[i][5] = flight.getString(RestServer.ARRIVAL_AIRPORT);
+            flightList[i][6] = flight.getString(RestServer.ARRIVAL_TIME);
         }
     }
 
@@ -93,11 +95,11 @@ public class ClientMain extends javax.swing.JFrame {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             flightList,
             new String [] {
-                "Origin Date", "Flight Number", "Dep Airport", "Dep Time", "Arr Airport", "Arr Time"
+                "Origin Date", "Flight Number", "Type", "Dep Airport", "Dep Time", "Arr Airport", "Arr Time"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

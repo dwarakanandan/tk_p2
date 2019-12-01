@@ -12,6 +12,7 @@ import java.io.IOException;
 public class RestServer implements ServerInterface{
     public static final String ORIGIN_DATE = "date";
     public static final String FILGHT_NUMBER = "flightId";
+    public static final String FILGHT_TYPE = "airplaneType";
     public static final String DEPARTURE_AIRPORT = "departureAirport";
     public static final String DEPARTURE_TIME = "departureTime";
     public static final String ARRIVAL_AIRPORT = "arrivalAirport";
