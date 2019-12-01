@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import group.ten.p2.interfaces.RestServer;
 import group.ten.p2.interfaces.ServerInterface;
+import group.ten.p2.interfaces.SoapServer;
 
 /**
  *
@@ -149,22 +150,28 @@ public class Payment extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+
         if(type.startsWith("REST")){
             serverInterface = new RestServer();
-            try {
-                String rval = serverInterface.bookSeatForFlight(this.flightIdentifier, this.seatIdentifier);
-                if (rval.equals("SUCCESS")) {
-                    javax.swing.JLabel label = new javax.swing.JLabel("Booking Successfull !!!");
-                    label.setFont(new java.awt.Font("Consolas", java.awt.Font.PLAIN, 18));
-                    javax.swing.JOptionPane.showMessageDialog(null, label, "SUCCESS" , javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    javax.swing.JLabel label = new javax.swing.JLabel("Booking Failed, Seat might have already been taken !!!");
-                    label.setFont(new java.awt.Font("Consolas", java.awt.Font.PLAIN, 18));
-                    javax.swing.JOptionPane.showMessageDialog(null, label, "ERROR" , javax.swing.JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        }else if(type.startsWith("SOAP")){
+            serverInterface = new SoapServer();
+        }else{
+            throw new RuntimeException("Server interface must be SOAP or REST");
+        }
+
+        try {
+            String rval = serverInterface.bookSeatForFlight(this.flightIdentifier, this.seatIdentifier, "asasdf", "Name", 33, "Vegetarian");
+            if (rval.equals("SUCCESS")) {
+                javax.swing.JLabel label = new javax.swing.JLabel("Booking Successfull !!!");
+                label.setFont(new java.awt.Font("Consolas", java.awt.Font.PLAIN, 18));
+                javax.swing.JOptionPane.showMessageDialog(null, label, "SUCCESS" , javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                javax.swing.JLabel label = new javax.swing.JLabel("Booking Failed, Seat might have already been taken !!!");
+                label.setFont(new java.awt.Font("Consolas", java.awt.Font.PLAIN, 18));
+                javax.swing.JOptionPane.showMessageDialog(null, label, "ERROR" , javax.swing.JOptionPane.ERROR_MESSAGE);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         this.dispose();
     }

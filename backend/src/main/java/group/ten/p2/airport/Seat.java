@@ -7,6 +7,7 @@ public class Seat {
     String letter;
     boolean exitRow;
     boolean available = true;
+    Booking booking;
 
     public Seat(int row, String letter, String type, boolean exitRow){
         this.type = type;
@@ -58,5 +59,13 @@ public class Seat {
 
     public String getUniqueCode(){
         return row + letter;
+    }
+
+    public Booking getBooking() {
+        return booking;
+    }
+
+    public void setBooking(Booking booking) {
+        this.booking = booking;
     }
 }

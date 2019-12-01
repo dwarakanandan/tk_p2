@@ -10,6 +10,7 @@ import group.ten.p2.interfaces.ServerInterface;
 
 import java.io.IOException;
 
+import group.ten.p2.interfaces.SoapServer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -30,12 +31,17 @@ public class ClientMain extends javax.swing.JFrame {
         this.type = type;
         if(type.startsWith("REST")){
             serverInterface = new RestServer();
-            try {
-                flightListString = serverInterface.getFlights();
-                populateFlightList();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        }else if(type.startsWith("SOAP")){
+            serverInterface = new SoapServer();
+        }else{
+            throw new RuntimeException("Server interface must be SOAP or REST");
+        }
+
+        try {
+            flightListString = serverInterface.getFlights();
+            populateFlightList();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         initComponents();
@@ -182,6 +188,12 @@ public class ClientMain extends javax.swing.JFrame {
             }
         });
 
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ClientMain("SOAP-CLIENT-"+System.currentTimeMillis()).setVisible(true);
+            }
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

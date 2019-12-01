@@ -58,8 +58,8 @@ public class RestServer implements ServerInterface{
         }
     }
 
-    public String bookSeatForFlight(String flightNumber, String seatNumber) throws IOException {
-        String queryParams = "?flightId="+flightNumber+"&"+"seatId="+seatNumber;
+    public String bookSeatForFlight(String flightNumber, String seatNumber, String userId, String userName, int userAge, String foodSelection) throws IOException {
+        String queryParams = "?flightId="+flightNumber+"&"+"seatId="+seatNumber + "&userId=" + userId + "&userName=" + userName + "&userAge=" + userAge + "&foodSelection" + foodSelection;
         HttpGet request = new HttpGet(baseURL + "/book" + queryParams);
 
         try(CloseableHttpResponse response = httpClient.execute(request)){

@@ -52,18 +52,22 @@ public class ReservationBookingController {
 	@Path("/book")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String bookSeat(@QueryParam("flightId") String flightId, @QueryParam("seatId") String seatId){
+	public String bookSeat(@QueryParam("flightId") String flightId,
+						   @QueryParam("seatId") String seatId,
+						   @QueryParam("userId") String userId,
+						   @QueryParam("userName") String userName,
+						   @QueryParam("userAge") int userAge,
+						   @QueryParam("foodSelection") String foodSelection){
 		HashMap<String, Flight> flights = ServerMain.getFlights();
 		Flight flight = flights.get(flightId);
-		Seat seat = flight.getSeat(seatId);
-		if(seat.isAvailable()){
-			seat.setAvailable(false);
-			System.out.println(SERVER_TAG + "/book/" + flightId+ "/" + seatId + " SUCCESS\n");
+		if(flight == null){
+			System.out.println(SERVER_TAG + "/book/" + flightId+ "/" + seatId + " FAILURE: flight does not exist\n");
 			return "SUCCESS";
-		}else{
-			System.out.println(SERVER_TAG + "/book/" + flightId+ "/" + seatId + " FAILURE\n");
-			return "FAILURE";
 		}
+
+		String result = flight.bookSeat(seatId, userId, userName, userAge, foodSelection);
+		System.out.println(SERVER_TAG + "/book/" + flightId+ "/" + seatId + " " + result + "\n");
+		return result;
 	}
 
 }

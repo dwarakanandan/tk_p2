@@ -32,6 +32,20 @@ public class Flight {
         this.economyPrice = economyPrice;
     }
 
+    public String bookSeat(String seatId, String userId, String userName, int userAge, String foodSelection){
+        Seat seat = airplane.getSeats().get(seatId);
+
+        if(seat == null) return "FAILURE";
+        if(!seat.isAvailable()) return "FAILURE";
+        if(seat.exitRow && userAge > 40) return "FAILURE";
+
+        Booking booking = new Booking(seat, userId, userName, userAge, foodSelection);
+        seat.setBooking(booking);
+        seat.setAvailable(false);
+        return "SUCCESS";
+
+    }
+
 
     public String getDate() {
         return date.toString();

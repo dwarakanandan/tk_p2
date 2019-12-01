@@ -3,7 +3,7 @@ package group.ten.p2;
 import com.sun.net.httpserver.HttpServer;
 import group.ten.p2.airport.Flight;
 import group.ten.p2.rest.ReservationBookingController;
-import group.ten.p2.soap.ReservationBookingService;
+import group.ten.p2.soap.ReservationBookingImpl;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -35,7 +35,7 @@ public class ServerMain {
 		}
 
 		// run SOAP server
-		Endpoint.publish("http://localhost:8090/bookingservice", new ReservationBookingService());
+		Endpoint.publish("http://localhost:8090/bookingservice", new ReservationBookingImpl());
 
 		// run REST server
 		ResourceConfig rc = new ResourceConfig(ReservationBookingController.class);

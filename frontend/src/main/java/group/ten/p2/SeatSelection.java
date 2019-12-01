@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import group.ten.p2.interfaces.SoapServer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -36,14 +37,20 @@ public class SeatSelection extends javax.swing.JFrame {
         this.flightIdentifier = flightIdentifier;
         if(type.startsWith("REST")){
             serverInterface = new RestServer();
-            try {
-                flightString = serverInterface.getFlight(this.flightIdentifier);
-                flightSeatsString = serverInterface.getSeatsForFlight(this.flightIdentifier);
-                populateFlight();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        }else if(type.startsWith("SOAP")){
+            serverInterface = new SoapServer();
+        }else{
+            throw new RuntimeException("Server interface must be SOAP or REST");
         }
+
+        try {
+            flightString = serverInterface.getFlight(this.flightIdentifier);
+            flightSeatsString = serverInterface.getSeatsForFlight(this.flightIdentifier);
+            populateFlight();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         initComponents();
         this.setTitle(this.type);
     }
