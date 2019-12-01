@@ -28,7 +28,7 @@ public class ClientMain extends javax.swing.JFrame {
      */
     public ClientMain(String type) {
         this.type = type;
-        if(type=="REST"){
+        if(type.startsWith("REST")){
             serverInterface = new RestServer();
             try {
                 flightListString = serverInterface.getFlights();
@@ -37,7 +37,10 @@ public class ClientMain extends javax.swing.JFrame {
                 e.printStackTrace();
             }
         }
+
         initComponents();
+
+        this.setTitle(this.type);
     }
 
     private void populateFlightList() {
@@ -175,7 +178,7 @@ public class ClientMain extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ClientMain("REST").setVisible(true);
+                new ClientMain("REST-CLIENT-"+System.currentTimeMillis()).setVisible(true);
             }
         });
 

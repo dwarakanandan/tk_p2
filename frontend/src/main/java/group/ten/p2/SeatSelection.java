@@ -6,6 +6,7 @@
 package group.ten.p2;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.json.JSONArray;
@@ -19,6 +20,7 @@ import group.ten.p2.interfaces.ServerInterface;
  * @author dwara
  */
 public class SeatSelection extends javax.swing.JFrame {
+    private String type;
     private ServerInterface serverInterface;
     private String flightIdentifier;
     private String flightString;
@@ -30,8 +32,9 @@ public class SeatSelection extends javax.swing.JFrame {
      * Creates new form SeatSelection
      */
     public SeatSelection(String type, String flightIdentifier) {
+        this.type = type;
         this.flightIdentifier = flightIdentifier;
-        if(type=="REST"){
+        if(type.startsWith("REST")){
             serverInterface = new RestServer();
             try {
                 flightString = serverInterface.getFlight(this.flightIdentifier);
@@ -42,6 +45,7 @@ public class SeatSelection extends javax.swing.JFrame {
             }
         }
         initComponents();
+        this.setTitle(this.type);
     }
 
     private void populateFlight() {
@@ -50,18 +54,23 @@ public class SeatSelection extends javax.swing.JFrame {
         flightDetails.put(RestServer.FILGHT_NUMBER, flight.getString(RestServer.FILGHT_NUMBER));
         flightDetails.put(RestServer.DEPARTURE_AIRPORT, flight.getString(RestServer.DEPARTURE_AIRPORT));
         flightDetails.put(RestServer.ARRIVAL_AIRPORT, flight.getString(RestServer.ARRIVAL_AIRPORT));
+        flightDetails.put(RestServer.FIRST_PRICE, String.valueOf(flight.get(RestServer.FIRST_PRICE)));
+        flightDetails.put(RestServer.ECONOMY_PLUS_PRICE, String.valueOf(flight.get(RestServer.ECONOMY_PLUS_PRICE)));
+        flightDetails.put(RestServer.ECONOMY_PRICE, String.valueOf(flight.get(RestServer.ECONOMY_PRICE)));
 
         JSONArray flightSeatsArrayJSON = new JSONArray(flightSeatsString);
-        flightSeatsArray = new String[flightSeatsArrayJSON.length()];
+        ArrayList<String> tempSeatList = new ArrayList<>();
         for (int i=0; i<flightSeatsArrayJSON.length(); i++) {
             JSONObject flightSeat = flightSeatsArrayJSON.getJSONObject(i);
             if((boolean)flightSeat.get(RestServer.SEAT_AVAIALBLE)) {
-                flightSeatsArray[i] = flightSeat.getString(RestServer.SEAT_UNIQUE_CODE) +"-[" + flightSeat.getString(RestServer.SEAT_TYPE)+ "]";
+                String tempFlightSeatString = flightSeat.getString(RestServer.SEAT_UNIQUE_CODE) +"-[" + flightSeat.getString(RestServer.SEAT_TYPE)+ "]";
                 if ((boolean)flightSeat.get(RestServer.EXIT_ROW)) {
-                    flightSeatsArray[i] = flightSeatsArray[i] + "-[EXIT]";
+                    tempFlightSeatString+= "-[EXIT]";
                 }
+                tempSeatList.add(tempFlightSeatString);
             }
         }
+        flightSeatsArray = tempSeatList.toArray(new String[tempSeatList.size()]);
     }
 
     /**
@@ -92,6 +101,7 @@ public class SeatSelection extends javax.swing.JFrame {
         jTextFieldAge = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jLabelPrice = new javax.swing.JLabel();
 
         jTextFieldOriginDate.setText(this.flightDetails.get(RestServer.ORIGIN_DATE));
         jTextFieldSelectedFlight.setText(this.flightDetails.get(RestServer.FILGHT_NUMBER));
@@ -131,7 +141,12 @@ public class SeatSelection extends javax.swing.JFrame {
         jLabel6.setText("Seat Selection: ");
 
         jComboBoxSeatSelection.setFont(new java.awt.Font("Consolas", 0, 16)); // NOI18N
-        jComboBoxSeatSelection.setModel(new javax.swing.DefaultComboBoxModel<>(flightSeatsArray));
+        jComboBoxSeatSelection.setModel(new javax.swing.DefaultComboBoxModel<>(this.flightSeatsArray));
+        jComboBoxSeatSelection.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxSeatSelectionActionPerformed(evt);
+            }
+        });
 
         jTextFieldSelectedFlight.setEditable(false);
         jTextFieldSelectedFlight.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
@@ -176,6 +191,10 @@ public class SeatSelection extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Consolas", 1, 24)); // NOI18N
         jLabel10.setText("FLIGHT DETAILS");
 
+        jLabelPrice.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
+        jLabelPrice.setText("*** Euros");
+        initJLabelPrice();
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -203,7 +222,9 @@ public class SeatSelection extends javax.swing.JFrame {
                     .addComponent(jTextFieldOriginDate)
                     .addComponent(jTextFieldDepartureAirport)
                     .addComponent(jTextFieldSelectedFlight))
-                .addGap(211, 211, 211))
+                .addGap(63, 63, 63)
+                .addComponent(jLabelPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(58, 58, 58))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
@@ -242,13 +263,15 @@ public class SeatSelection extends javax.swing.JFrame {
                     .addComponent(jTextFieldAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jComboBoxSeatSelection, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jComboBoxSeatSelection, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabelPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jComboBoxFoodPreference, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(24, 24, 24))
         );
@@ -280,6 +303,38 @@ public class SeatSelection extends javax.swing.JFrame {
         return splitSeatString[0];
     }
 
+    private void initJLabelPrice() {
+        String selectedSeat = flightSeatsArray[0];
+        String[] splitSeatString = selectedSeat.split("-");
+        String price = "";
+        if (splitSeatString[1].equals("[United First]")) {
+            price = flightDetails.get(RestServer.FIRST_PRICE);
+        } else if(splitSeatString[1].equals("[Economy Plus]")) {
+            price = flightDetails.get(RestServer.ECONOMY_PLUS_PRICE);
+        } else if(splitSeatString[1].equals("[Economy]")){
+            price = flightDetails.get(RestServer.ECONOMY_PRICE);
+        }
+        price+=" Euros";
+        jLabelPrice.setText(price);
+    }
+
+    private String getSeatPrice() {
+        if (jComboBoxSeatSelection.getSelectedIndex()<0) {
+            return "";
+        }
+        String selectedSeat = flightSeatsArray[jComboBoxSeatSelection.getSelectedIndex()];
+        String[] splitSeatString = selectedSeat.split("-");
+        String price = "";
+        if (splitSeatString[1].equals("[United First]")) {
+            price = flightDetails.get(RestServer.FIRST_PRICE);
+        } else if(splitSeatString[1].equals("[Economy Plus]")) {
+            price = flightDetails.get(RestServer.ECONOMY_PLUS_PRICE);
+        } else if(splitSeatString[1].equals("[Economy]")){
+            price = flightDetails.get(RestServer.ECONOMY_PRICE);
+        }
+        return price;
+    }
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (isNotValidSeat()) {
             javax.swing.JLabel label = new javax.swing.JLabel("Emergency exit seats can only be selected by customers 40 years of age or less!!!");
@@ -287,7 +342,7 @@ public class SeatSelection extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(null, label, "ERROR" , javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
-        new Payment(this.flightIdentifier, getSeatIdentifier()).setVisible(true);
+        new Payment(this.type, this.flightIdentifier, getSeatIdentifier(), getSeatPrice()).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -303,6 +358,12 @@ public class SeatSelection extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldDepartureAirportActionPerformed
 
+    private void jComboBoxSeatSelectionActionPerformed(java.awt.event.ActionEvent evt) {
+        String price = getSeatPrice();
+        price+=" Euros";
+        jLabelPrice.setText(price);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBoxFoodPreference;
@@ -317,6 +378,7 @@ public class SeatSelection extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelPrice;
     private javax.swing.JTextField jTextFieldAge;
     private javax.swing.JTextField jTextFieldArrivalAirport;
     private javax.swing.JTextField jTextFieldDepartureAirport;

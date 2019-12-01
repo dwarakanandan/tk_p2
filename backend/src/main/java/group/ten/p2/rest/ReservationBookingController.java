@@ -12,6 +12,8 @@ import java.util.HashMap;
 @Path("/bookingservice")
 public class ReservationBookingController {
 
+	private String SERVER_TAG = "[REST_SERVER]: ";
+
 	@Path("/{example}")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -25,6 +27,7 @@ public class ReservationBookingController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Flight> getFlights(){
 		HashMap<String,Flight> flights = ServerMain.getFlights();
+		System.out.println(SERVER_TAG + "/flights called by Client\n");
 		return flights.values();
 	}
 
@@ -33,6 +36,7 @@ public class ReservationBookingController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Flight getFlight(@PathParam("flightId") String flightId){
 		HashMap<String, Flight> flights = ServerMain.getFlights();
+		System.out.println(SERVER_TAG + "/flights/" + flightId+ " called by Client\n");
 		return flights.get(flightId);
 	}
 
@@ -41,6 +45,7 @@ public class ReservationBookingController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Seat> getSeats(@PathParam("flightId") String flightId){
 		HashMap<String, Flight> flights = ServerMain.getFlights();
+		System.out.println(SERVER_TAG + "/flights/" + flightId+ "/seats called by Client\n");
 		return flights.get(flightId).seats().values();
 	}
 
@@ -53,8 +58,10 @@ public class ReservationBookingController {
 		Seat seat = flight.getSeat(seatId);
 		if(seat.isAvailable()){
 			seat.setAvailable(false);
+			System.out.println(SERVER_TAG + "/book/" + flightId+ "/" + seatId + " SUCCESS\n");
 			return "SUCCESS";
 		}else{
+			System.out.println(SERVER_TAG + "/book/" + flightId+ "/" + seatId + " FAILURE\n");
 			return "FAILURE";
 		}
 	}

@@ -16,6 +16,9 @@ public class RestServer implements ServerInterface{
     public static final String DEPARTURE_TIME = "departureTime";
     public static final String ARRIVAL_AIRPORT = "arrivalAirport";
     public static final String ARRIVAL_TIME = "arrivalTime";
+    public static final String FIRST_PRICE = "firstPrice";
+    public static final String ECONOMY_PLUS_PRICE = "economyPlusPrice";
+    public static final String ECONOMY_PRICE = "economyPrice";
     public static final String SEAT_TYPE = "type";
     public static final String SEAT_UNIQUE_CODE = "uniqueCode";
     public static final String EXIT_ROW = "exitRow";
@@ -55,7 +58,13 @@ public class RestServer implements ServerInterface{
         }
     }
 
-    public String bookSeatForFlight(String flightNumber, String seatNumber) {
-        return "";
+    public String bookSeatForFlight(String flightNumber, String seatNumber) throws IOException {
+        String queryParams = "?flightId="+flightNumber+"&"+"seatId="+seatNumber;
+        HttpGet request = new HttpGet(baseURL + "/book" + queryParams);
+
+        try(CloseableHttpResponse response = httpClient.execute(request)){
+            HttpEntity entity = response.getEntity();
+            return EntityUtils.toString(entity);
+        }
     }
 }

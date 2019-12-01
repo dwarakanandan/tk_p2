@@ -5,21 +5,32 @@
  */
 package group.ten.p2;
 
+import java.io.IOException;
+
+import group.ten.p2.interfaces.RestServer;
+import group.ten.p2.interfaces.ServerInterface;
+
 /**
  *
  * @author dwara
  */
 public class Payment extends javax.swing.JFrame {
+    String type;
+    ServerInterface serverInterface;
     private String flightIdentifier;
     private String seatIdentifier;
+    private String seatPrice;
 
     /**
      * Creates new form Payment
      */
-    public Payment(String flightIdentifier, String seatIdentifier) {
+    public Payment(String type, String flightIdentifier, String seatIdentifier, String seatPrice) {
+        this.type = type;
         this.flightIdentifier = flightIdentifier;
         this.seatIdentifier = seatIdentifier;
+        this.seatPrice = seatPrice;
         initComponents();
+        this.setTitle(this.type);
     }
 
     /**
@@ -44,20 +55,31 @@ public class Payment extends javax.swing.JFrame {
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Consolas", 1, 24)); // NOI18N
-        jLabel1.setText("Your seat has been successfully reserved !!");
+        jLabel1.setText("Please pay to confirm your booking !!!");
 
         jLabel2.setFont(new java.awt.Font("Consolas", 0, 24)); // NOI18N
-        jLabel2.setText("Total Ticket Cost: (Euros) ");
+        jLabel2.setText("Total Ticket Cost: [Base Cost + 7.5% Tax] ");
 
         jButton1.setFont(new java.awt.Font("Consolas", 0, 24)); // NOI18N
         jButton1.setText("Pay Now");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jTextField1.setEditable(false);
         jTextField1.setFont(new java.awt.Font("Consolas", 0, 24)); // NOI18N
-        jTextField1.setText("5000");
+        double price = Double.parseDouble(this.seatPrice) + Double.parseDouble(this.seatPrice) *0.075;
+        jTextField1.setText(String.valueOf(price));
 
         jButton2.setFont(new java.awt.Font("Consolas", 0, 24)); // NOI18N
         jButton2.setText("Cancel Transaction");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Consolas", 0, 24)); // NOI18N
         jLabel3.setText("Payment Option:");
@@ -125,6 +147,31 @@ public class Payment extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        if(type.startsWith("REST")){
+            serverInterface = new RestServer();
+            try {
+                String rval = serverInterface.bookSeatForFlight(this.flightIdentifier, this.seatIdentifier);
+                if (rval.equals("SUCCESS")) {
+                    javax.swing.JLabel label = new javax.swing.JLabel("Booking Successfull !!!");
+                    label.setFont(new java.awt.Font("Consolas", java.awt.Font.PLAIN, 18));
+                    javax.swing.JOptionPane.showMessageDialog(null, label, "SUCCESS" , javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    javax.swing.JLabel label = new javax.swing.JLabel("Booking Failed, Seat might have already been taken !!!");
+                    label.setFont(new java.awt.Font("Consolas", java.awt.Font.PLAIN, 18));
+                    javax.swing.JOptionPane.showMessageDialog(null, label, "ERROR" , javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        this.dispose();
+    }
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+        this.dispose();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
